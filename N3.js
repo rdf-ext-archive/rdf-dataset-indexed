@@ -1,4 +1,4 @@
 module.exports = {
-  DataFactory:  require('./lib/N3DataFactory'),
+  utils:  require('./lib/utils'),
   Store:        require('./lib/N3Store'),
 };

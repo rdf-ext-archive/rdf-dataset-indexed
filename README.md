@@ -1,6 +1,6 @@
 # Lightning fast, asynchronous, streaming RDF for JavaScript
-[![Build Status](https://travis-ci.org/rdfjs/N3.js.svg?branch=master)](https://travis-ci.org/rdfjs/N3.js)
-[![Coverage Status](https://coveralls.io/repos/github/rdfjs/N3.js/badge.svg)](https://coveralls.io/github/rdfjs/N3.js)
+[![Build Status](https://travis-ci.org/vhf/N3.js.svg?branch=master)](https://travis-ci.org/vhf/N3.js)
+[![Coverage Status](https://coveralls.io/repos/github/vhf/N3.js/badge.svg)](https://coveralls.io/github/vhf/N3.js)
 [![npm version](https://badge.fury.io/js/n3.svg)](https://www.npmjs.com/package/n3)
 [![DOI](https://zenodo.org/badge/3058202.svg)](https://zenodo.org/badge/latestdoi/3058202)
 
@@ -23,7 +23,7 @@ It offers:
 Parsing and writing is:
 - **asynchronous** – triples arrive as soon as possible
 - **streaming** – streams are parsed as data comes in, so you can parse files larger than memory
-- **fast** – by far the [fastest spec-compatible parser in JavaScript](https://github.com/rdfjs/N3.js/tree/master/perf)
+- **fast** – by far the [fastest spec-compatible parser in JavaScript](https://github.com/vhf/N3.js/tree/master/perf)
 
 ## Installation
 For Node.js, N3.js comes as an [npm package](https://npmjs.org/package/n3).
@@ -258,7 +258,7 @@ Then, we find triples with `:Mickey` as subject.
 ```JavaScript
 const store = N3.Store();
 store.addQuad(
-  namedNode('http://ex.org/Pluto'), 
+  namedNode('http://ex.org/Pluto'),
   namedNode('http://ex.org/type'),
   namedNode('http://ex.org/Dog')
 );
@@ -302,13 +302,13 @@ The store provides the following search methods
 ### Format specifications
 The N3.js parser and writer is fully compatible with the following W3C specifications:
 - [RDF 1.1 Turtle](https://www.w3.org/TR/turtle/)
-  – [EARL report](https://raw.githubusercontent.com/rdfjs/N3.js/earl/n3js-earl-report-turtle.ttl)
+  – [EARL report](https://raw.githubusercontent.com/vhf/N3.js/earl/n3js-earl-report-turtle.ttl)
 - [RDF 1.1 TriG](https://www.w3.org/TR/trig/)
-  – [EARL report](https://raw.githubusercontent.com/rdfjs/N3.js/earl/n3js-earl-report-trig.ttl)
+  – [EARL report](https://raw.githubusercontent.com/vhf/N3.js/earl/n3js-earl-report-trig.ttl)
 - [RDF 1.1 N-Triples](https://www.w3.org/TR/n-triples/)
-  – [EARL report](https://raw.githubusercontent.com/rdfjs/N3.js/earl/n3js-earl-report-ntriples.ttl)
+  – [EARL report](https://raw.githubusercontent.com/vhf/N3.js/earl/n3js-earl-report-ntriples.ttl)
 - [RDF 1.1 N-Quads](https://www.w3.org/TR/n-quads/)
-  – [EARL report](https://raw.githubusercontent.com/rdfjs/N3.js/earl/n3js-earl-report-nquads.ttl)
+  – [EARL report](https://raw.githubusercontent.com/vhf/N3.js/earl/n3js-earl-report-nquads.ttl)
 
 In addition, the N3.js parser also supports [Notation3 (N3)](https://www.w3.org/TeamSubmission/n3/) (no official specification yet).
 

@@ -3,26 +3,13 @@ node_js:
  - "6"
  - "8"
  - "10"
- - "node"
-env:
- - DEFAULT_NODE_VERSION=10
 script:
   - npm run lint
   - npm test
-  - npm run spec-turtle
-  - npm run spec-ntriples
-  - npm run spec-nquads
-  - npm run spec-trig
-  - npm run docs
 after_success:
-  - if [ "$TRAVIS_NODE_VERSION" == "$DEFAULT_NODE_VERSION" ]; then
-      npm install coveralls;
-      node_modules/.bin/nyc --reporter=text-lcov mocha |
-        node_modules/.bin/coveralls;
-      ./.travis_build_pages;
-    fi
+  - npm run coveralls
 cache:
-  - npm
-  - directories:
-    - .rdf-test-suite-cache
+  apt: true
+  directories:
+    - node_modules
 sudo: false

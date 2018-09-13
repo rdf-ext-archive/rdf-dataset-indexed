@@ -1,11 +1,10 @@
 var N3Store = require('../N3').Store;
 
-var Readable = require('stream').Readable,
-    DataFactory = require('../N3').DataFactory;
-var NamedNode = DataFactory.internal.NamedNode,
-    DefaultGraph = DataFactory.internal.DefaultGraph,
-    Quad = DataFactory.internal.Quad,
-    fromId = DataFactory.internal.fromId;
+var Readable = require('stream').Readable;
+var utils = require('../').utils;
+var fromId = utils.fromId;
+
+var rdf = require('rdf-ext');
 
 describe('N3Store', function () {
   describe('The N3Store module', function () {
@@ -36,8 +35,8 @@ describe('N3Store', function () {
     describe('when importing a stream of 2 quads', function () {
       before(function (done) {
         var stream = new ArrayReader([
-          new Quad(new NamedNode('s1'), new NamedNode('p2'), new NamedNode('o2')),
-          new Quad(new NamedNode('s1'), new NamedNode('p1'), new NamedNode('o1')),
+          rdf.quad(rdf.namedNode('s1'), rdf.namedNode('p2'), rdf.namedNode('o2')),
+          rdf.quad(rdf.namedNode('s1'), rdf.namedNode('p1'), rdf.namedNode('o1')),
         ]);
         var events = store.import(stream);
         events.on('end', done);
@@ -49,8 +48,8 @@ describe('N3Store', function () {
     describe('when removing a stream of 2 quads', function () {
       before(function (done) {
         var stream = new ArrayReader([
-          new Quad(new NamedNode('s1'), new NamedNode('p2'), new NamedNode('o2')),
-          new Quad(new NamedNode('s1'), new NamedNode('p1'), new NamedNode('o1')),
+          rdf.quad(rdf.namedNode('s1'), rdf.namedNode('p2'), rdf.namedNode('o2')),
+          rdf.quad(rdf.namedNode('s1'), rdf.namedNode('p1'), rdf.namedNode('o1')),
         ]);
         var events = store.remove(stream);
         events.on('end', done);
@@ -87,8 +86,8 @@ describe('N3Store', function () {
 
     it('should still have size 0 (instead of null) after adding and removing a triple', function () {
       expect(store.size).to.eql(0);
-      store.addQuad(new NamedNode('a'), new NamedNode('b'), new NamedNode('c')).should.be.true;
-      store.removeQuad(new NamedNode('a'), new NamedNode('b'), new NamedNode('c')).should.be.true;
+      store.addQuad(rdf.namedNode('a'), rdf.namedNode('b'), rdf.namedNode('c')).should.be.true;
+      store.removeQuad(rdf.namedNode('a'), rdf.namedNode('b'), rdf.namedNode('c')).should.be.true;
       expect(store.size).to.eql(0);
     });
 
@@ -108,17 +107,17 @@ describe('N3Store', function () {
     });
 
     it('should be able to store triples with generated blank nodes', function () {
-      store.addQuad(store.createBlankNode('x'), new NamedNode('b'), new NamedNode('c')).should.be.true;
-      shouldIncludeAll(store.getQuads(null, new NamedNode('b')), ['_:x', 'b', 'c'])();
+      store.addQuad(store.createBlankNode('x'), rdf.namedNode('b'), rdf.namedNode('c')).should.be.true;
+      shouldIncludeAll(store.getQuads(null, rdf.namedNode('b')), ['_:x', 'b', 'c'])();
       store.removeQuads(store.getQuads());
     });
   });
 
   describe('An N3Store with initialized with 3 elements', function () {
     var store = new N3Store([
-      new Quad(new NamedNode('s1'), new NamedNode('p1'), new NamedNode('o1')),
-      new Quad(new NamedNode('s1'), new NamedNode('p1'), new NamedNode('o2')),
-      new Quad(new NamedNode('s1'), new NamedNode('p1'), new NamedNode('o3')),
+      rdf.quad(rdf.namedNode('s1'), rdf.namedNode('p1'), rdf.namedNode('o1')),
+      rdf.quad(rdf.namedNode('s1'), rdf.namedNode('p1'), rdf.namedNode('o2')),
+      rdf.quad(rdf.namedNode('s1'), rdf.namedNode('p1'), rdf.namedNode('o3')),
     ]);
 
     it('should have size 3', function () {
@@ -192,7 +191,7 @@ describe('N3Store', function () {
 
     describe('when searched with an existing subject parameter', function () {
       it('should return all items with this subject in all graphs',
-        shouldIncludeAll(store.getQuads(new NamedNode('s1'), null, null),
+        shouldIncludeAll(store.getQuads(rdf.namedNode('s1'), null, null),
                          ['s1', 'p1', 'o1'],
                          ['s1', 'p1', 'o2'],
                          ['s1', 'p2', 'o2'],
@@ -200,16 +199,16 @@ describe('N3Store', function () {
     });
 
     describe('when searched with a non-existing subject parameter', function () {
-      itShouldBeEmpty(store.getQuads(new NamedNode('s3'), null, null));
+      itShouldBeEmpty(store.getQuads(rdf.namedNode('s3'), null, null));
     });
 
     describe('when searched with a non-existing subject parameter that exists elsewhere', function () {
-      itShouldBeEmpty(store.getQuads(new NamedNode('p1'), null, null));
+      itShouldBeEmpty(store.getQuads(rdf.namedNode('p1'), null, null));
     });
 
     describe('when searched with an existing predicate parameter', function () {
       it('should return all items with this predicate in all graphs',
-        shouldIncludeAll(store.getQuads(null, new NamedNode('p1'), null),
+        shouldIncludeAll(store.getQuads(null, rdf.namedNode('p1'), null),
                          ['s1', 'p1', 'o1'],
                          ['s1', 'p1', 'o2'],
                          ['s2', 'p1', 'o1'],
@@ -217,70 +216,70 @@ describe('N3Store', function () {
     });
 
     describe('when searched with a non-existing predicate parameter', function () {
-      itShouldBeEmpty(store.getQuads(null, new NamedNode('p3'), null));
+      itShouldBeEmpty(store.getQuads(null, rdf.namedNode('p3'), null));
     });
 
     describe('when searched with an existing object parameter', function () {
       it('should return all items with this object in all graphs',
-        shouldIncludeAll(store.getQuads(null, null, new NamedNode('o1')),
+        shouldIncludeAll(store.getQuads(null, null, rdf.namedNode('o1')),
                          ['s1', 'p1', 'o1'],
                          ['s2', 'p1', 'o1'],
                          ['s1', 'p1', 'o1', 'c4']));
     });
 
     describe('when searched with a non-existing object parameter', function () {
-      itShouldBeEmpty(store.getQuads(null, null, new NamedNode('o4')));
+      itShouldBeEmpty(store.getQuads(null, null, rdf.namedNode('o4')));
     });
 
     describe('when searched with existing subject and predicate parameters', function () {
       it('should return all items with this subject and predicate in all graphs',
-        shouldIncludeAll(store.getQuads(new NamedNode('s1'), new NamedNode('p1'), null),
+        shouldIncludeAll(store.getQuads(rdf.namedNode('s1'), rdf.namedNode('p1'), null),
                          ['s1', 'p1', 'o1'],
                          ['s1', 'p1', 'o2'],
                          ['s1', 'p1', 'o1', 'c4']));
     });
 
     describe('when searched with non-existing subject and predicate parameters', function () {
-      itShouldBeEmpty(store.getQuads(new NamedNode('s2'), new NamedNode('p2'), null));
+      itShouldBeEmpty(store.getQuads(rdf.namedNode('s2'), rdf.namedNode('p2'), null));
     });
 
     describe('when searched with existing subject and object parameters', function () {
       it('should return all items with this subject and object in all graphs',
-        shouldIncludeAll(store.getQuads(new NamedNode('s1'), null, new NamedNode('o1')),
+        shouldIncludeAll(store.getQuads(rdf.namedNode('s1'), null, rdf.namedNode('o1')),
                          ['s1', 'p1', 'o1'],
                          ['s1', 'p1', 'o1', 'c4']));
     });
 
     describe('when searched with non-existing subject and object parameters', function () {
-      itShouldBeEmpty(store.getQuads(new NamedNode('s2'), new NamedNode('p2'), null));
+      itShouldBeEmpty(store.getQuads(rdf.namedNode('s2'), rdf.namedNode('p2'), null));
     });
 
     describe('when searched with existing predicate and object parameters', function () {
       it('should return all items with this predicate and object in all graphs',
-        shouldIncludeAll(store.getQuads(null, new NamedNode('p1'), new NamedNode('o1')),
+        shouldIncludeAll(store.getQuads(null, rdf.namedNode('p1'), rdf.namedNode('o1')),
                          ['s1', 'p1', 'o1'],
                          ['s2', 'p1', 'o1'],
                          ['s1', 'p1', 'o1', 'c4']));
     });
 
     describe('when searched with non-existing predicate and object parameters in the default graph', function () {
-      itShouldBeEmpty(store.getQuads(null, new NamedNode('p2'), new NamedNode('o3'), new DefaultGraph()));
+      itShouldBeEmpty(store.getQuads(null, rdf.namedNode('p2'), rdf.namedNode('o3'), rdf.defaultGraph()));
     });
 
     describe('when searched with existing subject, predicate, and object parameters', function () {
       it('should return all items with this subject, predicate, and object in all graphs',
-        shouldIncludeAll(store.getQuads(new NamedNode('s1'), new NamedNode('p1'), new NamedNode('o1')),
+        shouldIncludeAll(store.getQuads(rdf.namedNode('s1'), rdf.namedNode('p1'), rdf.namedNode('o1')),
                          ['s1', 'p1', 'o1'],
                          ['s1', 'p1', 'o1', 'c4']));
     });
 
     describe('when searched with a non-existing triple', function () {
-      itShouldBeEmpty(store.getQuads(new NamedNode('s2'), new NamedNode('p2'), new NamedNode('o1')));
+      itShouldBeEmpty(store.getQuads(rdf.namedNode('s2'), rdf.namedNode('p2'), rdf.namedNode('o1')));
     });
 
     describe('when searched with the default graph parameter', function () {
       it('should return all items in the default graph',
-        shouldIncludeAll(store.getQuads(null, null, null, new DefaultGraph()),
+        shouldIncludeAll(store.getQuads(null, null, null, rdf.defaultGraph()),
                          ['s1', 'p1', 'o1'],
                          ['s1', 'p1', 'o2'],
                          ['s1', 'p2', 'o2'],
@@ -289,60 +288,60 @@ describe('N3Store', function () {
 
     describe('when searched with an existing named graph parameter', function () {
       it('should return all items in that graph',
-        shouldIncludeAll(store.getQuads(null, null, null, new NamedNode('c4')),
+        shouldIncludeAll(store.getQuads(null, null, null, rdf.namedNode('c4')),
                          ['s1', 'p1', 'o1', 'c4']));
     });
 
     describe('when searched with a non-existing named graph parameter', function () {
-      itShouldBeEmpty(store.getQuads(null, null, null, new NamedNode('c5')));
+      itShouldBeEmpty(store.getQuads(null, null, null, rdf.namedNode('c5')));
     });
 
     describe('getSubjects', function () {
       describe('with existing predicate, object and graph parameters', function () {
         it('should return all subjects with this predicate, object and graph', function () {
-          store.getSubjects(new NamedNode('p1'), new NamedNode('o1'), new NamedNode('c4')).should.have.deep.members([new NamedNode('s1')]);
+          store.getSubjects(rdf.namedNode('p1'), rdf.namedNode('o1'), rdf.namedNode('c4')).should.have.deep.members([rdf.namedNode('s1')]);
         });
       });
 
       describe('with existing predicate and object parameters', function () {
         it('should return all subjects with this predicate and object', function () {
-          store.getSubjects(new NamedNode('p2'), new NamedNode('o2'), null).should.have.deep.members([new NamedNode('s1')]);
+          store.getSubjects(rdf.namedNode('p2'), rdf.namedNode('o2'), null).should.have.deep.members([rdf.namedNode('s1')]);
         });
       });
 
       describe('with existing predicate and graph parameters', function () {
         it('should return all subjects with this predicate and graph', function () {
-          store.getSubjects(new NamedNode('p1'), null, new DefaultGraph()).should.have.deep.members([new NamedNode('s1'), new NamedNode('s2')]);
+          store.getSubjects(rdf.namedNode('p1'), null, rdf.defaultGraph()).should.have.deep.members([rdf.namedNode('s1'), rdf.namedNode('s2')]);
         });
       });
 
       describe('with existing object and graph parameters', function () {
         it('should return all subjects with this object and graph', function () {
-          store.getSubjects(null, new NamedNode('o1'), new DefaultGraph()).should.have.deep.members([new NamedNode('s1'), new NamedNode('s2')]);
+          store.getSubjects(null, rdf.namedNode('o1'), rdf.defaultGraph()).should.have.deep.members([rdf.namedNode('s1'), rdf.namedNode('s2')]);
         });
       });
 
       describe('with an existing predicate parameter', function () {
         it('should return all subjects with this predicate', function () {
-          store.getSubjects(new NamedNode('p1'), null, null).should.have.deep.members([new NamedNode('s1'), new NamedNode('s2')]);
+          store.getSubjects(rdf.namedNode('p1'), null, null).should.have.deep.members([rdf.namedNode('s1'), rdf.namedNode('s2')]);
         });
       });
 
       describe('with an existing object parameter', function () {
         it('should return all subjects with this object', function () {
-          store.getSubjects(null, new NamedNode('o1'), null).should.have.deep.members([new NamedNode('s1'), new NamedNode('s2')]);
+          store.getSubjects(null, rdf.namedNode('o1'), null).should.have.deep.members([rdf.namedNode('s1'), rdf.namedNode('s2')]);
         });
       });
 
       describe('with an existing graph parameter', function () {
         it('should return all subjects in the graph', function () {
-          store.getSubjects(null, null, new NamedNode('c4')).should.have.deep.members([new NamedNode('s1')]);
+          store.getSubjects(null, null, rdf.namedNode('c4')).should.have.deep.members([rdf.namedNode('s1')]);
         });
       });
 
       describe('with no parameters', function () {
         it('should return all subjects', function () {
-          store.getSubjects(null, null, null).should.have.deep.members([new NamedNode('s1'), new NamedNode('s2')]);
+          store.getSubjects(null, null, null).should.have.deep.members([rdf.namedNode('s1'), rdf.namedNode('s2')]);
         });
       });
     });
@@ -350,49 +349,49 @@ describe('N3Store', function () {
     describe('getPredicates', function () {
       describe('with existing subject, object and graph parameters', function () {
         it('should return all predicates with this subject, object and graph', function () {
-          store.getPredicates(new NamedNode('s1'), new NamedNode('o1'), new NamedNode('c4')).should.have.deep.members([new NamedNode('p1')]);
+          store.getPredicates(rdf.namedNode('s1'), rdf.namedNode('o1'), rdf.namedNode('c4')).should.have.deep.members([rdf.namedNode('p1')]);
         });
       });
 
       describe('with existing subject and object parameters', function () {
         it('should return all predicates with this subject and object', function () {
-          store.getPredicates(new NamedNode('s1'), new NamedNode('o2'), null).should.have.deep.members([new NamedNode('p1'), new NamedNode('p2')]);
+          store.getPredicates(rdf.namedNode('s1'), rdf.namedNode('o2'), null).should.have.deep.members([rdf.namedNode('p1'), rdf.namedNode('p2')]);
         });
       });
 
       describe('with existing subject and graph parameters', function () {
         it('should return all predicates with this subject and graph', function () {
-          store.getPredicates(new NamedNode('s1'), null, new DefaultGraph()).should.have.deep.members([new NamedNode('p1'), new NamedNode('p2')]);
+          store.getPredicates(rdf.namedNode('s1'), null, rdf.defaultGraph()).should.have.deep.members([rdf.namedNode('p1'), rdf.namedNode('p2')]);
         });
       });
 
       describe('with existing object and graph parameters', function () {
         it('should return all predicates with this object and graph', function () {
-          store.getPredicates(null, new NamedNode('o1'), new DefaultGraph()).should.have.deep.members([new NamedNode('p1')]);
+          store.getPredicates(null, rdf.namedNode('o1'), rdf.defaultGraph()).should.have.deep.members([rdf.namedNode('p1')]);
         });
       });
 
       describe('with an existing subject parameter', function () {
         it('should return all predicates with this subject', function () {
-          store.getPredicates(new NamedNode('s2'), null, null).should.have.deep.members([new NamedNode('p1')]);
+          store.getPredicates(rdf.namedNode('s2'), null, null).should.have.deep.members([rdf.namedNode('p1')]);
         });
       });
 
       describe('with an existing object parameter', function () {
         it('should return all predicates with this object', function () {
-          store.getPredicates(null, new NamedNode('o1'), null).should.have.deep.members([new NamedNode('p1')]);
+          store.getPredicates(null, rdf.namedNode('o1'), null).should.have.deep.members([rdf.namedNode('p1')]);
         });
       });
 
       describe('with an existing graph parameter', function () {
         it('should return all predicates in the graph', function () {
-          store.getPredicates(null, null, new NamedNode('c4')).should.have.deep.members([new NamedNode('p1')]);
+          store.getPredicates(null, null, rdf.namedNode('c4')).should.have.deep.members([rdf.namedNode('p1')]);
         });
       });
 
       describe('with no parameters', function () {
         it('should return all predicates', function () {
-          store.getPredicates(null, null, null).should.have.deep.members([new NamedNode('p1'), new NamedNode('p2')]);
+          store.getPredicates(null, null, null).should.have.deep.members([rdf.namedNode('p1'), rdf.namedNode('p2')]);
         });
       });
     });
@@ -400,49 +399,49 @@ describe('N3Store', function () {
     describe('getObjects', function () {
       describe('with existing subject, predicate and graph parameters', function () {
         it('should return all objects with this subject, predicate and graph', function () {
-          store.getObjects(new NamedNode('s1'), new NamedNode('p1'), new DefaultGraph()).should.have.deep.members([new NamedNode('o1'), new NamedNode('o2')]);
+          store.getObjects(rdf.namedNode('s1'), rdf.namedNode('p1'), rdf.defaultGraph()).should.have.deep.members([rdf.namedNode('o1'), rdf.namedNode('o2')]);
         });
       });
 
       describe('with existing subject and predicate parameters', function () {
         it('should return all objects with this subject and predicate', function () {
-          store.getObjects(new NamedNode('s1'), new NamedNode('p1'), null).should.have.deep.members([new NamedNode('o1'), new NamedNode('o2')]);
+          store.getObjects(rdf.namedNode('s1'), rdf.namedNode('p1'), null).should.have.deep.members([rdf.namedNode('o1'), rdf.namedNode('o2')]);
         });
       });
 
       describe('with existing subject and graph parameters', function () {
         it('should return all objects with this subject and graph', function () {
-          store.getObjects(new NamedNode('s1'), null, new DefaultGraph()).should.have.deep.members([new NamedNode('o1'), new NamedNode('o2')]);
+          store.getObjects(rdf.namedNode('s1'), null, rdf.defaultGraph()).should.have.deep.members([rdf.namedNode('o1'), rdf.namedNode('o2')]);
         });
       });
 
       describe('with existing predicate and graph parameters', function () {
         it('should return all objects with this predicate and graph', function () {
-          store.getObjects(null, new NamedNode('p1'), new DefaultGraph()).should.have.deep.members([new NamedNode('o1'), new NamedNode('o2')]);
+          store.getObjects(null, rdf.namedNode('p1'), rdf.defaultGraph()).should.have.deep.members([rdf.namedNode('o1'), rdf.namedNode('o2')]);
         });
       });
 
       describe('with an existing subject parameter', function () {
         it('should return all objects with this subject', function () {
-          store.getObjects(new NamedNode('s1'), null, null).should.have.deep.members([new NamedNode('o1'), new NamedNode('o2')]);
+          store.getObjects(rdf.namedNode('s1'), null, null).should.have.deep.members([rdf.namedNode('o1'), rdf.namedNode('o2')]);
         });
       });
 
       describe('with an existing predicate parameter', function () {
         it('should return all objects with this predicate', function () {
-          store.getObjects(null, new NamedNode('p1'), null).should.have.deep.members([new NamedNode('o1'), new NamedNode('o2')]);
+          store.getObjects(null, rdf.namedNode('p1'), null).should.have.deep.members([rdf.namedNode('o1'), rdf.namedNode('o2')]);
         });
       });
 
       describe('with an existing graph parameter', function () {
         it('should return all objects in the graph', function () {
-          store.getObjects(null, null, new NamedNode('c4')).should.have.deep.members([new NamedNode('o1')]);
+          store.getObjects(null, null, rdf.namedNode('c4')).should.have.deep.members([rdf.namedNode('o1')]);
         });
       });
 
       describe('with no parameters', function () {
         it('should return all objects', function () {
-          store.getObjects(null, null, null).should.have.deep.members([new NamedNode('o1'), new NamedNode('o2')]);
+          store.getObjects(null, null, null).should.have.deep.members([rdf.namedNode('o1'), rdf.namedNode('o2')]);
         });
       });
     });
@@ -450,49 +449,49 @@ describe('N3Store', function () {
     describe('getGraphs', function () {
       describe('with existing subject, predicate and object parameters', function () {
         it('should return all graphs with this subject, predicate and object', function () {
-          store.getGraphs(new NamedNode('s1'), new NamedNode('p1'), new NamedNode('o1')).should.have.deep.members([new NamedNode('c4'), new DefaultGraph()]);
+          store.getGraphs(rdf.namedNode('s1'), rdf.namedNode('p1'), rdf.namedNode('o1')).should.have.deep.members([rdf.namedNode('c4'), rdf.defaultGraph()]);
         });
       });
 
       describe('with existing subject and predicate parameters', function () {
         it('should return all graphs with this subject and predicate', function () {
-          store.getGraphs(new NamedNode('s1'), new NamedNode('p1'), null).should.have.deep.members([new NamedNode('c4'), new DefaultGraph()]);
+          store.getGraphs(rdf.namedNode('s1'), rdf.namedNode('p1'), null).should.have.deep.members([rdf.namedNode('c4'), rdf.defaultGraph()]);
         });
       });
 
       describe('with existing subject and object parameters', function () {
         it('should return all graphs with this subject and object', function () {
-          store.getGraphs(new NamedNode('s1'), null, new NamedNode('o2')).should.have.deep.members([new DefaultGraph()]);
+          store.getGraphs(rdf.namedNode('s1'), null, rdf.namedNode('o2')).should.have.deep.members([rdf.defaultGraph()]);
         });
       });
 
       describe('with existing predicate and object parameters', function () {
         it('should return all graphs with this predicate and object', function () {
-          store.getGraphs(null, new NamedNode('p1'), new NamedNode('o1')).should.have.deep.members([new DefaultGraph(), new NamedNode('c4')]);
+          store.getGraphs(null, rdf.namedNode('p1'), rdf.namedNode('o1')).should.have.deep.members([rdf.defaultGraph(), rdf.namedNode('c4')]);
         });
       });
 
       describe('with an existing subject parameter', function () {
         it('should return all graphs with this subject', function () {
-          store.getGraphs(new NamedNode('s1'), null, null).should.have.deep.members([new NamedNode('c4'), new DefaultGraph()]);
+          store.getGraphs(rdf.namedNode('s1'), null, null).should.have.deep.members([rdf.namedNode('c4'), rdf.defaultGraph()]);
         });
       });
 
       describe('with an existing predicate parameter', function () {
         it('should return all graphs with this predicate', function () {
-          store.getGraphs(null, new NamedNode('p1'), null).should.have.deep.members([new NamedNode('c4'), new DefaultGraph()]);
+          store.getGraphs(null, rdf.namedNode('p1'), null).should.have.deep.members([rdf.namedNode('c4'), rdf.defaultGraph()]);
         });
       });
 
       describe('with an existing object parameter', function () {
         it('should return all graphs with this object', function () {
-          store.getGraphs(null, null, new NamedNode('o2')).should.have.deep.members([new DefaultGraph()]);
+          store.getGraphs(null, null, rdf.namedNode('o2')).should.have.deep.members([rdf.defaultGraph()]);
         });
       });
 
       describe('with no parameters', function () {
         it('should return all graphs', function () {
-          store.getGraphs(null, null, null).should.have.deep.members([new NamedNode('c4'), new DefaultGraph()]);
+          store.getGraphs(null, null, null).should.have.deep.members([rdf.namedNode('c4'), rdf.defaultGraph()]);
         });
       });
     });
@@ -621,7 +620,7 @@ describe('N3Store', function () {
     describe('forSubjects', function () {
       describe('with existing predicate, object and graph parameters', function () {
         it('should iterate all subjects with this predicate, object and graph', function () {
-          collect(store, 'forSubjects', 'p1', 'o1', '').should.have.deep.members([new NamedNode('s1'), new NamedNode('s2')]);
+          collect(store, 'forSubjects', 'p1', 'o1', '').should.have.deep.members([rdf.namedNode('s1'), rdf.namedNode('s2')]);
         });
       });
       describe('with a non-existing predicate', function () {
@@ -644,7 +643,7 @@ describe('N3Store', function () {
     describe('forPredicates', function () {
       describe('with existing subject, object and graph parameters', function () {
         it('should iterate all predicates with this subject, object and graph', function () {
-          collect(store, 'forPredicates', 's1', 'o2', '').should.have.deep.members([new NamedNode('p1'), new NamedNode('p2')]);
+          collect(store, 'forPredicates', 's1', 'o2', '').should.have.deep.members([rdf.namedNode('p1'), rdf.namedNode('p2')]);
         });
       });
       describe('with a non-existing subject', function () {
@@ -667,7 +666,7 @@ describe('N3Store', function () {
     describe('forObjects', function () {
       describe('with existing subject, predicate and graph parameters', function () {
         it('should iterate all objects with this subject, predicate and graph', function () {
-          collect(store, 'forObjects', 's1', 'p1', '').should.have.deep.members([new NamedNode('o1'), new NamedNode('o2')]);
+          collect(store, 'forObjects', 's1', 'p1', '').should.have.deep.members([rdf.namedNode('o1'), rdf.namedNode('o2')]);
         });
       });
       describe('with a non-existing subject', function () {
@@ -690,7 +689,7 @@ describe('N3Store', function () {
     describe('forGraphs', function () {
       describe('with existing subject, predicate and object parameters', function () {
         it('should iterate all graphs with this subject, predicate and object', function () {
-          collect(store, 'forGraphs', 's1', 'p1', 'o1').should.have.deep.members([new DefaultGraph(), new NamedNode('c4')]);
+          collect(store, 'forGraphs', 's1', 'p1', 'o1').should.have.deep.members([rdf.defaultGraph(), rdf.namedNode('c4')]);
         });
       });
       describe('with a non-existing subject', function () {
@@ -752,22 +751,22 @@ describe('N3Store', function () {
       });
       describe('with a non-existing subject', function () {
         it('should return true', function () {
-          store.some(null, new NamedNode('s3'), null, null, null).should.be.false;
+          store.some(null, rdf.namedNode('s3'), null, null, null).should.be.false;
         });
       });
       describe('with a non-existing predicate', function () {
         it('should return false', function () {
-          store.some(null, null, new NamedNode('p3'), null, null).should.be.false;
+          store.some(null, null, rdf.namedNode('p3'), null, null).should.be.false;
         });
       });
       describe('with a non-existing object', function () {
         it('should return false', function () {
-          store.some(null, null, null, new NamedNode('o4'), null).should.be.false;
+          store.some(null, null, null, rdf.namedNode('o4'), null).should.be.false;
         });
       });
       describe('with a non-existing graph', function () {
         it('should return false', function () {
-          store.some(null, null, null, null, new NamedNode('g2')).should.be.false;
+          store.some(null, null, null, null, rdf.namedNode('g2')).should.be.false;
         });
       });
     });
@@ -780,31 +779,31 @@ describe('N3Store', function () {
 
     describe('when counted with an existing subject parameter', function () {
       it('should count all items with this subject in all graphs', function () {
-        store.countQuads(new NamedNode('s1'), null, null).should.equal(4);
+        store.countQuads(rdf.namedNode('s1'), null, null).should.equal(4);
       });
     });
 
     describe('when counted with a non-existing subject parameter', function () {
       it('should be empty', function () {
-        store.countQuads(new NamedNode('s3'), null, null).should.equal(0);
+        store.countQuads(rdf.namedNode('s3'), null, null).should.equal(0);
       });
     });
 
     describe('when counted with a non-existing subject parameter that exists elsewhere', function () {
       it('should be empty', function () {
-        store.countQuads(new NamedNode('p1'), null, null).should.equal(0);
+        store.countQuads(rdf.namedNode('p1'), null, null).should.equal(0);
       });
     });
 
     describe('when counted with an existing predicate parameter', function () {
       it('should count all items with this predicate in all graphs', function () {
-        store.countQuads(null, new NamedNode('p1'), null).should.equal(4);
+        store.countQuads(null, rdf.namedNode('p1'), null).should.equal(4);
       });
     });
 
     describe('when counted with a non-existing predicate parameter', function () {
       it('should be empty', function () {
-        store.countQuads(null, new NamedNode('p3'), null).should.equal(0);
+        store.countQuads(null, rdf.namedNode('p3'), null).should.equal(0);
       });
     });
 
@@ -870,7 +869,7 @@ describe('N3Store', function () {
 
     describe('when counted with the default graph parameter', function () {
       it('should count all items in the default graph', function () {
-        store.countQuads(null, null, null, new DefaultGraph()).should.equal(4);
+        store.countQuads(null, null, null, rdf.defaultGraph()).should.equal(4);
       });
     });
 
@@ -887,52 +886,52 @@ describe('N3Store', function () {
     });
 
     describe('when trying to remove a triple with a non-existing subject', function () {
-      before(function () { store.removeQuad(new NamedNode('s0'), new NamedNode('p1'), new NamedNode('o1')).should.be.false; });
+      before(function () { store.removeQuad(rdf.namedNode('s0'), rdf.namedNode('p1'), rdf.namedNode('o1')).should.be.false; });
       it('should still have size 5', function () { store.size.should.eql(5); });
     });
 
     describe('when trying to remove a triple with a non-existing predicate', function () {
-      before(function () { store.removeQuad(new NamedNode('s1'), new NamedNode('p0'), new NamedNode('o1')).should.be.false; });
+      before(function () { store.removeQuad(rdf.namedNode('s1'), rdf.namedNode('p0'), rdf.namedNode('o1')).should.be.false; });
       it('should still have size 5', function () { store.size.should.eql(5); });
     });
 
     describe('when trying to remove a triple with a non-existing object', function () {
-      before(function () { store.removeQuad(new NamedNode('s1'), new NamedNode('p1'), new NamedNode('o0')).should.be.false; });
+      before(function () { store.removeQuad(rdf.namedNode('s1'), rdf.namedNode('p1'), rdf.namedNode('o0')).should.be.false; });
       it('should still have size 5', function () { store.size.should.eql(5); });
     });
 
     describe('when trying to remove a triple for which no subjects exist', function () {
-      before(function () { store.removeQuad(new NamedNode('o1'), new NamedNode('p1'), new NamedNode('o1')).should.be.false; });
+      before(function () { store.removeQuad(rdf.namedNode('o1'), rdf.namedNode('p1'), rdf.namedNode('o1')).should.be.false; });
       it('should still have size 5', function () { store.size.should.eql(5); });
     });
 
     describe('when trying to remove a triple for which no predicates exist', function () {
-      before(function () { store.removeQuad(new NamedNode('s1'), new NamedNode('s1'), new NamedNode('o1')).should.be.false; });
+      before(function () { store.removeQuad(rdf.namedNode('s1'), rdf.namedNode('s1'), rdf.namedNode('o1')).should.be.false; });
       it('should still have size 5', function () { store.size.should.eql(5); });
     });
 
     describe('when trying to remove a triple for which no objects exist', function () {
-      before(function () { store.removeQuad(new NamedNode('s1'), new NamedNode('p1'), new NamedNode('s1')).should.be.false; });
+      before(function () { store.removeQuad(rdf.namedNode('s1'), rdf.namedNode('p1'), rdf.namedNode('s1')).should.be.false; });
       it('should still have size 5', function () { store.size.should.eql(5); });
     });
 
     describe('when trying to remove a triple that does not exist', function () {
-      before(function () { store.removeQuad(new NamedNode('s1'), new NamedNode('p2'), new NamedNode('o1')).should.be.false; });
+      before(function () { store.removeQuad(rdf.namedNode('s1'), rdf.namedNode('p2'), rdf.namedNode('o1')).should.be.false; });
       it('should still have size 5', function () { store.size.should.eql(5); });
     });
 
     describe('when trying to remove an incomplete triple', function () {
-      before(function () { store.removeQuad(new NamedNode('s1'), null, null).should.be.false; });
+      before(function () { store.removeQuad(rdf.namedNode('s1'), null, null).should.be.false; });
       it('should still have size 5', function () { store.size.should.eql(5); });
     });
 
     describe('when trying to remove a triple with a non-existing graph', function () {
-      before(function () { store.removeQuad(new NamedNode('s1'), new NamedNode('p1'), new NamedNode('o1'), new NamedNode('c0')).should.be.false; });
+      before(function () { store.removeQuad(rdf.namedNode('s1'), rdf.namedNode('p1'), rdf.namedNode('o1'), rdf.namedNode('c0')).should.be.false; });
       it('should still have size 5', function () { store.size.should.eql(5); });
     });
 
     describe('when removing an existing triple', function () {
-      before(function () { store.removeQuad(new NamedNode('s1'), new NamedNode('p1'), new NamedNode('o1')).should.be.true; });
+      before(function () { store.removeQuad(rdf.namedNode('s1'), rdf.namedNode('p1'), rdf.namedNode('o1')).should.be.true; });
 
       it('should have size 4', function () { store.size.should.eql(4); });
 
@@ -945,7 +944,7 @@ describe('N3Store', function () {
     });
 
     describe('when removing an existing triple from a named graph', function () {
-      before(function () { store.removeQuad(new NamedNode('s1'), new NamedNode('p1'), new NamedNode('o1'), new NamedNode('c4')).should.be.true; });
+      before(function () { store.removeQuad(rdf.namedNode('s1'), rdf.namedNode('p1'), rdf.namedNode('o1'), rdf.namedNode('c4')).should.be.true; });
 
       it('should have size 3', function () { store.size.should.eql(3); });
 
@@ -955,8 +954,8 @@ describe('N3Store', function () {
     describe('when removing multiple triples', function () {
       before(function () {
         store.removeQuads([
-          new Quad(new NamedNode('s1'), new NamedNode('p2'), new NamedNode('o2')),
-          new Quad(new NamedNode('s2'), new NamedNode('p1'), new NamedNode('o1')),
+          rdf.quad(rdf.namedNode('s1'), rdf.namedNode('p2'), rdf.namedNode('o2')),
+          rdf.quad(rdf.namedNode('s2'), rdf.namedNode('p1'), rdf.namedNode('o1')),
         ]);
       });
 
@@ -969,8 +968,8 @@ describe('N3Store', function () {
 
     describe('when adding and removing a triple', function () {
       before(function () {
-        store.addQuad(new NamedNode('a'), new NamedNode('b'), new NamedNode('c')).should.be.true;
-        store.removeQuad(new NamedNode('a'), new NamedNode('b'), new NamedNode('c')).should.be.true;
+        store.addQuad(rdf.namedNode('a'), rdf.namedNode('b'), rdf.namedNode('c')).should.be.true;
+        store.removeQuad(rdf.namedNode('a'), rdf.namedNode('b'), rdf.namedNode('c')).should.be.true;
       });
 
       it('should have an unchanged size', function () { store.size.should.eql(1); });
@@ -980,7 +979,7 @@ describe('N3Store', function () {
   describe('An N3Store containing a blank node', function () {
     var store = new N3Store();
     var b1 = store.createBlankNode();
-    store.addQuad(new NamedNode('s1'), new NamedNode('p1'), b1).should.be.true;
+    store.addQuad(rdf.namedNode('s1'), rdf.namedNode('p1'), b1).should.be.true;
 
     describe('when searched with more than one variable', function () {
       it('should return a triple with the blank node as an object',
@@ -1060,7 +1059,7 @@ function itShouldBeEmpty(result) {
 
 function shouldIncludeAll(result) {
   var items = Array.prototype.slice.call(arguments, 1).map(function (arg) {
-    return new Quad(fromId(arg[0]), fromId(arg[1]), fromId(arg[2]), fromId(arg[3] || ''));
+    return rdf.quad(fromId(arg[0]), fromId(arg[1]), fromId(arg[2]), fromId(arg[3] || ''));
   });
   return function () {
     if (typeof result === 'function') result = result();

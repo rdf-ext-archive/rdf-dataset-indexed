@@ -27,10 +27,7 @@
     "docco": "^0.8.0",
     "eslint": "^4.1.1",
     "mocha": "^5.0.1",
-    "nyc": "^12.0.2",
-    "pre-commit": "^1.2.2",
-    "rdf-test-suite": "^1.2.0",
-    "streamify-string": "^1.0.1"
+    "nyc": "^12.0.2"
   },
   "scripts": {
     "test": "nyc mocha",
@@ -55,8 +52,7 @@
   "bugs": {
     "url": "https://github.com/rdfjs/N3.js/issues"
   },
-  "pre-commit": [
-    "lint",
-    "test"
-  ]
+  "dependencies": {
+    "rdf-ext": "^1.1.0"
+  }
 }
