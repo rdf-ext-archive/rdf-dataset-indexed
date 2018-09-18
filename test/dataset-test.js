@@ -71,6 +71,20 @@ describe('SimpleDataset', () => {
     assert.equal(dataset.size, 1)
   })
 
+  it('.add should store a quad as-is (preserving its proto and attrs)', () => {
+    const quad = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('object'))
+
+    quad.foo = () => 'bar'
+
+    const dataset = new Dataset()
+
+    dataset.add(quad)
+
+    const retrievedQuad = dataset.toArray()[0]
+    assert.equal(retrievedQuad.foo(), 'bar')
+  })
+
   it('.addAll should import all triples from the given graph', () => {
     let quad1 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
       rdf.literal('a'))
