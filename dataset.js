@@ -12,13 +12,12 @@ class Dataset extends N3Store {
   }
 
   add (quad) {
-    this._addQuad(quad.subject, quad.predicate, quad.object, quad.graph)
+    this._addQuad(quad)
     return this
   }
 
   addAll (quads) {
     this._addQuads(quads)
-
     return this
   }
 
@@ -76,7 +75,7 @@ class Dataset extends N3Store {
 
   removeMatches (subject, predicate, object, graph) {
     const remove = (quad) => {
-      this._removeQuad(quad.subject, quad.predicate, quad.object, quad.graph)
+      this._removeQuad(quad)
     }
     this._forEach(remove, subject, predicate, object, graph)
 

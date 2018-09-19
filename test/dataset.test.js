@@ -46,8 +46,11 @@ describe('SimpleDataset', () => {
   })
 
   test('.length should contain the number of triples in the graph', () => {
-    const quad = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('object'))
+    const quad = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('object')
+    )
 
     const dataset = new Dataset([quad])
 
@@ -55,8 +58,11 @@ describe('SimpleDataset', () => {
   })
 
   test('.add should add triples to the graph', () => {
-    const quad = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('object'))
+    const quad = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('object')
+    )
 
     const dataset = new Dataset()
 
@@ -66,8 +72,11 @@ describe('SimpleDataset', () => {
   })
 
   test('.add should not create duplicates', () => {
-    const quad = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('object'))
+    const quad = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('object')
+    )
 
     const dataset = new Dataset()
 
@@ -77,9 +86,12 @@ describe('SimpleDataset', () => {
     expect(dataset.size).toBe(1)
   })
 
-  test.skip('.add should store a quad as-is (preserving its proto and attrs)', () => {
-    const quad = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('object'))
+  test('.add should store a quad as-is (preserving its proto and attrs)', () => {
+    const quad = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('object')
+    )
 
     quad.foo = () => 'bar'
 
@@ -92,11 +104,17 @@ describe('SimpleDataset', () => {
   })
 
   test('.addAll should import all triples from the given graph', () => {
-    const quad1 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('a'))
+    const quad1 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('a')
+    )
 
-    const quad2 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('b'))
+    const quad2 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('b')
+    )
 
     const dataset1 = new Dataset([quad1])
     const dataset2 = new Dataset([quad2])
@@ -108,8 +126,11 @@ describe('SimpleDataset', () => {
   })
 
   test('.clone should create a new Dataset instance that contains all quads of the original', () => {
-    const quad = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('object'))
+    const quad = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('object')
+    )
 
     const dataset = new Dataset()
 
@@ -119,18 +140,26 @@ describe('SimpleDataset', () => {
 
     expect(dataset === clone).toBe(false)
     expect(dataset.toArray()[0].equals(clone.toArray()[0])).toBe(true)
-  }
-  )
+  })
 
   test('.difference should return a dataset with quads not included in the other dataset', () => {
-    const quad1 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('a'))
+    const quad1 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('a')
+    )
 
-    const quad2 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('b'))
+    const quad2 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('b')
+    )
 
-    const quad3 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('c'))
+    const quad3 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('c')
+    )
 
     const dataset1 = new Dataset([quad1, quad2])
     const dataset2 = new Dataset([quad2, quad3])
@@ -138,15 +167,20 @@ describe('SimpleDataset', () => {
 
     expect(difference.toArray().length).toBe(1)
     expect(quad1.equals(difference.toArray()[0])).toBe(true)
-  }
-  )
+  })
 
   test('.every should return true if every quad pass the filter test', () => {
-    const quad1 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('a'))
+    const quad1 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('a')
+    )
 
-    const quad2 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('b'))
+    const quad2 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('b')
+    )
 
     const dataset = new Dataset([quad1, quad2])
 
@@ -155,26 +189,37 @@ describe('SimpleDataset', () => {
   })
 
   test('.filter should return a new dataset that contains all quads that pass the filter test', () => {
-    const quad1 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('a'))
+    const quad1 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('a')
+    )
 
-    const quad2 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('b'))
+    const quad2 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('b')
+    )
 
     const dataset = new Dataset([quad1, quad2])
 
     expect(dataset.filter(simpleFilter(rdf.namedNode('http://example.org/subject'), null, null)).length).toBe(2)
     expect(dataset.filter(simpleFilter(null, null, rdf.literal('a'))).length).toBe(1)
     expect(dataset.filter(simpleFilter(null, null, rdf.literal('c'))).length).toBe(0)
-  }
-  )
+  })
 
   test('.forEach should call the callback function for every quad', () => {
-    const quad1 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('a'))
+    const quad1 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('a')
+    )
 
-    const quad2 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('b'))
+    const quad2 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('b')
+    )
 
     const dataset = new Dataset([quad1, quad2])
 
@@ -191,10 +236,14 @@ describe('SimpleDataset', () => {
   test('.import should import quads from stream', () => {
     const stream = new EventEmitter()
     const dataset = new Dataset()
-    const quad1 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
+    const quad1 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
       rdf.literal('a'))
 
-    const quad2 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
+    const quad2 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
       rdf.literal('b'))
 
     const result = dataset.import(stream)
@@ -227,10 +276,14 @@ describe('SimpleDataset', () => {
   })
 
   test('.includes should test if the dataset contains the given quad', () => {
-    const quad1 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
+    const quad1 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
       rdf.literal('a'))
 
-    const quad2 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
+    const quad2 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
       rdf.literal('b'))
 
     const dataset = new Dataset([quad1])
@@ -240,13 +293,19 @@ describe('SimpleDataset', () => {
   })
 
   test('.intersection should return a dataset with quads included also in the other dataset', () => {
-    const quad1 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
+    const quad1 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
       rdf.literal('a'))
 
-    const quad2 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
+    const quad2 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
       rdf.literal('b'))
 
-    const quad3 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
+    const quad3 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
       rdf.literal('c'))
 
     const dataset1 = new Dataset([quad1, quad2])
@@ -255,8 +314,7 @@ describe('SimpleDataset', () => {
 
     expect(intersection.toArray().length).toBe(1)
     expect(quad2.equals(intersection.toArray()[0])).toBe(true)
-  }
-  )
+  })
 
   test('.map should call the callback function for every quad and return a Dataset that contains the new quads', () => {
     const quad = rdf.quad(
@@ -275,8 +333,7 @@ describe('SimpleDataset', () => {
 
     expect(mappedDataset.length).toBe(1)
     expect(mappedQuad.equals(mappedDataset.toArray()[0])).toBe(true)
-  }
-  )
+  })
 
   test('.match should return a new dataset that contains all quads that pass the subject match pattern', () => {
     const subject1 = rdf.namedNode('http://example.org/subject1')
@@ -291,8 +348,7 @@ describe('SimpleDataset', () => {
     expect(dataset.match(rdf.namedNode('http://example.org/subject1'), null, null, null).length).toBe(1)
     expect(dataset.match(rdf.namedNode('http://example.org/subject2'), null, null, null).length).toBe(1)
     expect(dataset.match(rdf.namedNode('http://example.org/subject3'), null, null, null).length).toBe(0)
-  }
-  )
+  })
 
   test('.match should return a new dataset that contains all quads that pass the predicate match pattern', () => {
     const subject = rdf.namedNode('http://example.org/subject')
@@ -307,8 +363,7 @@ describe('SimpleDataset', () => {
     expect(dataset.match(null, rdf.namedNode('http://example.org/predicate1'), null, null).length).toBe(1)
     expect(dataset.match(null, rdf.namedNode('http://example.org/predicate2'), null, null).length).toBe(1)
     expect(dataset.match(null, rdf.namedNode('http://example.org/predicate3'), null, null).length).toBe(0)
-  }
-  )
+  })
 
   test('.match should return a new dataset that contains all quads that pass the object match pattern', () => {
     const subject = rdf.namedNode('http://example.org/subject')
@@ -323,8 +378,7 @@ describe('SimpleDataset', () => {
     expect(dataset.match(null, null, rdf.namedNode('http://example.org/object1'), null).length).toBe(1)
     expect(dataset.match(null, null, rdf.namedNode('http://example.org/object2'), null).length).toBe(1)
     expect(dataset.match(null, null, rdf.namedNode('http://example.org/object3'), null).length).toBe(0)
-  }
-  )
+  })
 
   test('.match should return a new dataset that contains all quads that pass the graph match pattern', () => {
     const subject = rdf.namedNode('http://example.org/subject')
@@ -339,14 +393,17 @@ describe('SimpleDataset', () => {
     expect(dataset.match(null, null, null, rdf.namedNode('http://example.org/graph1')).length).toBe(1)
     expect(dataset.match(null, null, null, rdf.namedNode('http://example.org/graph2')).length).toBe(1)
     expect(dataset.match(null, null, null, rdf.namedNode('http://example.org/graph3')).length).toBe(0)
-  }
-  )
+  })
 
   test('.merge should return a new graph that contains all triples from the graph object and the given graph', () => {
-    const quad1 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
+    const quad1 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
       rdf.literal('a'))
 
-    const quad2 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
+    const quad2 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
       rdf.literal('b'))
 
     const dataset1 = new Dataset([quad1])
@@ -356,12 +413,14 @@ describe('SimpleDataset', () => {
     expect(dataset1.toArray().length).toBe(1)
     expect(dataset2.toArray().length).toBe(1)
     expect(dataset3.toArray().length).toBe(2)
-  }
-  )
+  })
 
   test('.remove should remove the given triple', () => {
-    const quad = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
-      rdf.literal('object'))
+    const quad = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('object')
+    )
     const dataset = new Dataset([quad])
 
     dataset.remove(quad)
@@ -382,8 +441,7 @@ describe('SimpleDataset', () => {
     expect(dataset.removeMatches(rdf.namedNode('http://example.org/subject3'), null, null, null).length).toBe(2)
     expect(dataset.removeMatches(rdf.namedNode('http://example.org/subject2'), null, null, null).length).toBe(1)
     expect(dataset.removeMatches(rdf.namedNode('http://example.org/subject1'), null, null, null).length).toBe(0)
-  }
-  )
+  })
 
   test('.removeMatches should remove all quads that pass the predicate match pattern and return the dataset itself', () => {
     const subject = rdf.namedNode('http://example.org/subject')
@@ -398,8 +456,7 @@ describe('SimpleDataset', () => {
     expect(dataset.removeMatches(null, rdf.namedNode('http://example.org/predicate3'), null, null).length).toBe(2)
     expect(dataset.removeMatches(null, rdf.namedNode('http://example.org/predicate2'), null, null).length).toBe(1)
     expect(dataset.removeMatches(null, rdf.namedNode('http://example.org/predicate1'), null, null).length).toBe(0)
-  }
-  )
+  })
 
   test('.removeMatches should remove all quads that pass the object match pattern and return the dataset itself', () => {
     const subject = rdf.namedNode('http://example.org/subject')
@@ -414,8 +471,7 @@ describe('SimpleDataset', () => {
     expect(dataset.removeMatches(null, null, rdf.namedNode('http://example.org/object3'), null).length).toBe(2)
     expect(dataset.removeMatches(null, null, rdf.namedNode('http://example.org/object2'), null).length).toBe(1)
     expect(dataset.removeMatches(null, null, rdf.namedNode('http://example.org/object1'), null).length).toBe(0)
-  }
-  )
+  })
 
   test('.removeMatches should remove all quads that pass the graph match pattern and return the dataset itself', () => {
     const subject = rdf.namedNode('http://example.org/subject')
@@ -430,14 +486,17 @@ describe('SimpleDataset', () => {
     expect(dataset.removeMatches(null, null, null, rdf.namedNode('http://example.org/graph3')).length).toBe(2)
     expect(dataset.removeMatches(null, null, null, rdf.namedNode('http://example.org/graph2')).length).toBe(1)
     expect(dataset.removeMatches(null, null, null, rdf.namedNode('http://example.org/graph1')).length).toBe(0)
-  }
-  )
+  })
 
   test('.some should return true if any quad pass the filter test', () => {
-    const quad1 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
+    const quad1 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
       rdf.literal('a'))
 
-    const quad2 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
+    const quad2 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
       rdf.literal('b'))
 
     const dataset = new Dataset([quad1, quad2])
@@ -447,10 +506,14 @@ describe('SimpleDataset', () => {
   })
 
   test('.toArray should return all quads in an array', () => {
-    const quad1 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
+    const quad1 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
       rdf.literal('a'))
 
-    const quad2 = rdf.quad(rdf.namedNode('http://example.org/subject'), rdf.namedNode('http://example.org/predicate'),
+    const quad2 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
       rdf.literal('b'))
 
     const dataset = new Dataset([quad1, quad2])
@@ -487,6 +550,5 @@ describe('SimpleDataset', () => {
         output.push(quad)
       })
     })
-  }
-  )
+  })
 })
