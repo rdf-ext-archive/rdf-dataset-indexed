@@ -61,7 +61,7 @@ class Dataset extends N3Store {
   }
 
   match (subject, predicate, object, graph) {
-    return this._getQuads(subject, predicate, object, graph)
+    return new Dataset(this._getQuads(subject, predicate, object, graph))
   }
 
   merge (other) {
