@@ -44,7 +44,7 @@ class Dataset extends N3Store {
 
   import (stream) {
     return new Promise((resolve, reject) => {
-      this._import(stream).on('end', () => resolve()).on('error', err => reject(err))
+      this._import(stream).on('end', () => resolve(this)).on('error', err => reject(err))
     })
   }
 
