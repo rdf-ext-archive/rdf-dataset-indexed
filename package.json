@@ -1,52 +1,49 @@
 {
-  "name": "n3",
-  "version": "1.0.3",
-  "description": "Lightning fast, asynchronous, streaming Turtle / N3 / RDF library.",
-  "author": "Ruben Verborgh <ruben.verborgh@gmail.com>",
+  "name": "rdf-dataset-indexed",
+  "version": "0.1.0",
+  "description": "A fast, indexed RDFJS Dataset implementation",
+  "author": "Victor Felder <victor@draft.li> (https://draft.li)",
   "keywords": [
-    "turtle",
     "rdf",
-    "n3",
-    "streaming",
-    "asynchronous"
+    "rdfjs",
+    "rdf-ext",
+    "dataset",
+    "indexed"
   ],
   "license": "MIT",
-  "main": "./dataset.js",
+  "main": "./index.js",
   "engines": {
-    "node": ">=4.0"
+    "node": ">=6.0"
   },
   "files": [
     "dataset.js",
-    "N3.js",
+    "index.js",
     "lib"
   ],
   "devDependencies": {
-    "async": "^2.6.1",
-    "babel-eslint": "^9.0.0",
+    "babel-eslint": "^10.0.1",
     "coveralls": "^3.0.2",
-    "docco": "^0.8.0",
-    "eslint": "^5.6.0",
+    "eslint": "^5.12.1",
     "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jest": "^21.22.0",
-    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-import": "^2.15.0",
+    "eslint-plugin-jest": "^22.1.3",
+    "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
-    "follow-redirects": "^1.5.8",
-    "jest": "^23.6.0"
+    "jest": "^24.0.0"
   },
   "scripts": {
     "test": "jest",
-    "lint": "eslint lib perf test"
+    "lint": "eslint *.js lib perf test"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rdfjs/N3.js.git"
+    "url": "https://github.com/rdf-ext/rdf-dataset-indexed.git"
   },
   "bugs": {
-    "url": "https://github.com/rdfjs/N3.js/issues"
+    "url": "https://github.com/rdf-ext/rdf-dataset-indexed/issues"
   },
   "dependencies": {
-    "@rdfjs/data-model": "^1.1.0"
+    "@rdfjs/data-model": "^1.1.1"
   }
 }

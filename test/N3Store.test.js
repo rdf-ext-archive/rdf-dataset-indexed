@@ -1,7 +1,7 @@
 const Readable = require('stream').Readable
 
-const N3Store = require('../N3').Store
-const utils = require('../N3').utils
+const N3Store = require('../lib/N3Store')
+const utils = require('../lib/utils')
 const fromId = utils.fromId
 
 const rdf = require('@rdfjs/data-model')

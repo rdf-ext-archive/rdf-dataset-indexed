@@ -9,7 +9,6 @@ script:
 after_success:
   - npm run coveralls
 cache:
-  apt: true
   directories:
     - node_modules
 sudo: false

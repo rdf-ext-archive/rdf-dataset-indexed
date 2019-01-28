@@ -15,7 +15,7 @@ console.log('N3Store performance test')
 const prefix = 'http://example.org/#'
 
 /* Test triples */
-let dim = parseInt(process.argv[2], 10) || 256
+let dim = parseInt(process.argv[2], 10) || 64
 let dimSquared = dim * dim
 let dimCubed = dimSquared * dim
 

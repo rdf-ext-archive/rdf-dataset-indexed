@@ -8,7 +8,7 @@ if (!assert.hasOwnProperty('strict')) {
   }
 }
 const rdf = require('@rdfjs/data-model')
-const Dataset = require('../dataset')
+const Dataset = require('../index')
 const EventEmitter = require('events').EventEmitter
 
 function simpleFilter (subject, predicate, object, graph) {
