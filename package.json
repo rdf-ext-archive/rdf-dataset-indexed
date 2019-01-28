@@ -33,8 +33,9 @@
     "jest": "^24.0.0"
   },
   "scripts": {
-    "test": "jest",
-    "lint": "eslint *.js lib perf test"
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "lint": "eslint *.js lib perf test",
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",

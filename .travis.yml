@@ -1,8 +1,11 @@
+sudo: false
 language: node_js
 node_js:
- - "6"
- - "8"
- - "10"
+  - "6"
+  - "8"
+  - "10"
+install:
+  - npm ci
 script:
   - npm run lint
   - npm test
@@ -11,4 +14,3 @@ after_success:
 cache:
   directories:
     - node_modules
-sudo: false
