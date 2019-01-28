@@ -45,6 +45,7 @@
     "url": "https://github.com/rdf-ext/rdf-dataset-indexed/issues"
   },
   "dependencies": {
-    "@rdfjs/data-model": "^1.1.1"
+    "@rdfjs/data-model": "^1.1.1",
+    "readable-stream": "^3.1.1"
   }
 }
