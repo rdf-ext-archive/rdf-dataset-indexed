@@ -144,9 +144,7 @@ describe('SimpleDataset', () => {
 
   test('.clone should use the factory to create a new Dataset instance', () => {
     const factory = {
-      dataset: () => {
-        return 'test'
-      }
+      dataset: () => 'test'
     }
 
     const dataset = new Dataset(null, factory)
@@ -180,6 +178,18 @@ describe('SimpleDataset', () => {
 
     expect(difference.toArray().length).toBe(1)
     expect(quad1.equals(difference.toArray()[0])).toBe(true)
+  })
+
+  test('.difference should use the factory to create a new Dataset instance', () => {
+    const factory = {
+      dataset: () => 'test'
+    }
+
+    const dataset1 = new Dataset(null, factory)
+    const dataset2 = new Dataset()
+    const difference = dataset1.difference(dataset2)
+
+    expect(difference).toBe('test')
   })
 
   test('.every should return true if every quad pass the filter test', () => {
@@ -219,6 +229,17 @@ describe('SimpleDataset', () => {
     expect(dataset.filter(simpleFilter(rdf.namedNode('http://example.org/subject'), null, null)).length).toBe(2)
     expect(dataset.filter(simpleFilter(null, null, rdf.literal('a'))).length).toBe(1)
     expect(dataset.filter(simpleFilter(null, null, rdf.literal('c'))).length).toBe(0)
+  })
+
+  test('.filter should use the factory to create a new Dataset instance', () => {
+    const factory = {
+      dataset: () => 'test'
+    }
+
+    const dataset = new Dataset(null, factory)
+    const filtered = dataset.filter(() => true)
+
+    expect(filtered).toBe('test')
   })
 
   test('.forEach should call the callback function for every quad', () => {
@@ -329,6 +350,18 @@ describe('SimpleDataset', () => {
     expect(quad2.equals(intersection.toArray()[0])).toBe(true)
   })
 
+  test('.intersection should use the factory to create a new Dataset instance', () => {
+    const factory = {
+      dataset: () => 'test'
+    }
+
+    const dataset1 = new Dataset(null, factory)
+    const dataset2 = new Dataset(null, factory)
+    const intersection = dataset1.intersection(dataset2)
+
+    expect(intersection).toBe('test')
+  })
+
   test('.map should call the callback function for every quad and return a Dataset that contains the new quads', () => {
     const quad = rdf.quad(
       rdf.namedNode('http://example.org/subject'),
@@ -346,6 +379,17 @@ describe('SimpleDataset', () => {
 
     expect(mappedDataset.length).toBe(1)
     expect(mappedQuad.equals(mappedDataset.toArray()[0])).toBe(true)
+  })
+
+  test('.map should use the factory to create a new Dataset instance', () => {
+    const factory = {
+      dataset: () => 'test'
+    }
+
+    const dataset = new Dataset(null, factory)
+    const mapped = dataset.map(quad => quad)
+
+    expect(mapped).toBe('test')
   })
 
   test('.match should return a new dataset that contains all quads that pass the subject match pattern', () => {
@@ -406,6 +450,17 @@ describe('SimpleDataset', () => {
     expect(dataset.match(null, null, null, rdf.namedNode('http://example.org/graph1')).length).toBe(1)
     expect(dataset.match(null, null, null, rdf.namedNode('http://example.org/graph2')).length).toBe(1)
     expect(dataset.match(null, null, null, rdf.namedNode('http://example.org/graph3')).length).toBe(0)
+  })
+
+  test('.match should use the factory to create a new Dataset instance', () => {
+    const factory = {
+      dataset: () => 'test'
+    }
+
+    const dataset = new Dataset(null, factory)
+    const matched = dataset.match()
+
+    expect(matched).toBe('test')
   })
 
   test('.merge should return a new graph that contains all triples from the graph object and the given graph', () => {
