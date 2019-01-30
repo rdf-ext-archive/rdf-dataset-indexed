@@ -12,7 +12,7 @@ class Dataset extends N3Store {
   }
 
   create (quads) {
-    return this._factory.dataset(quads, this._factory)
+    return this._factory.dataset(quads)
   }
 
   get length () {
