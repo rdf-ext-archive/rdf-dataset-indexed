@@ -1,10 +1,18 @@
+const DataFactory = require('@rdfjs/data-model')
 const Readable = require('readable-stream')
 const N3Store = require('./lib/N3Store')
 
+const CombinedFactory = Object.assign({}, DataFactory, {
+  dataset: quads => new Dataset(quads, CombinedFactory)
+})
+
 class Dataset extends N3Store {
-  constructor (quads = [], options = {}) {
-    super(quads, options)
-    this.options = options
+  constructor (quads = [], factory = CombinedFactory) {
+    super(quads, { factory })
+  }
+
+  create (quads) {
+    return this._factory.dataset(quads, this._factory)
   }
 
   get length () {
@@ -22,11 +30,11 @@ class Dataset extends N3Store {
   }
 
   clone () {
-    return new Dataset(this._getQuads(), this.options)
+    return this.create(this._getQuads())
   }
 
   difference (other) {
-    return new Dataset(this.filter(quad => !other.includes(quad)))
+    return this.create(this.filter(quad => !other.includes(quad)))
   }
 
   every (predicate) {
@@ -35,7 +43,7 @@ class Dataset extends N3Store {
 
   filter (predicate) {
     const filteredQuads = this.toArray().filter(quad => predicate(quad, this))
-    return new Dataset(filteredQuads)
+    return this.create(filteredQuads)
   }
 
   forEach (callback) {
@@ -53,15 +61,15 @@ class Dataset extends N3Store {
   }
 
   intersection (other) {
-    return new Dataset(this.filter(quad => other.includes(quad)))
+    return this.create(this.filter(quad => other.includes(quad)))
   }
 
   map (callback) {
-    return new Dataset(this.toArray().map(quad => callback(quad, this)))
+    return this.create(this.toArray().map(quad => callback(quad, this)))
   }
 
   match (subject, predicate, object, graph) {
-    return new Dataset(this._getQuads(subject, predicate, object, graph))
+    return this.create(this._getQuads(subject, predicate, object, graph))
   }
 
   merge (other) {

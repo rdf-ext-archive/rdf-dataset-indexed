@@ -142,6 +142,19 @@ describe('SimpleDataset', () => {
     expect(dataset.toArray()[0].equals(clone.toArray()[0])).toBe(true)
   })
 
+  test('.clone should use the factory to create a new Dataset instance', () => {
+    const factory = {
+      dataset: () => {
+        return 'test'
+      }
+    }
+
+    const dataset = new Dataset(null, factory)
+    const clone = dataset.clone()
+
+    expect(clone).toBe('test')
+  })
+
   test('.difference should return a dataset with quads not included in the other dataset', () => {
     const quad1 = rdf.quad(
       rdf.namedNode('http://example.org/subject'),
