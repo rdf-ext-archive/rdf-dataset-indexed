@@ -1,6 +1,6 @@
 {
   "name": "rdf-dataset-indexed",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A fast, indexed RDFJS Dataset implementation",
   "author": "Victor Felder <victor@draft.li> (https://draft.li)",
   "keywords": [
