@@ -20,7 +20,7 @@ function simpleFilter (subject, predicate, object, graph) {
   }
 }
 
-describe('SimpleDataset', () => {
+describe('Dataset', () => {
   test('should implement the Dataset interface', () => {
     const dataset = new Dataset()
 
