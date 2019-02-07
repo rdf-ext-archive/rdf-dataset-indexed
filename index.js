@@ -1,5 +1,8 @@
-const Dataset = require('./dataset')
+const rdf = require('@rdfjs/data-model')
+const Dataset = require('./Dataset')
 
-module.exports = function datasetFactory (quads = [], factory) {
-  return new Dataset(quads, factory)
+function dataset (quads) {
+  return new Dataset(quads)
 }
+
+module.exports = Object.assign({ dataset }, rdf)
