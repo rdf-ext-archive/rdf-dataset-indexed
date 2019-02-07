@@ -95,7 +95,7 @@ class Dataset extends N3Store {
   }
 
   toArray () {
-    return this._getQuads()
+    return Array.from(this._quads.values())
   }
 
   toStream () {
