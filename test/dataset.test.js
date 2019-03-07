@@ -94,6 +94,37 @@ describe('Dataset', () => {
     expect(quad1).toEqual(difference.toArray()[0])
   })
 
+  test('.equals should not test for isomorphism', () => {
+    const quad1 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('a')
+    )
+
+    const quad2 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('b')
+    )
+
+    const quad3 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('c')
+    )
+
+    const a = rdf.dataset([quad1, quad2, quad3])
+    const b = rdf.dataset([quad3, quad2, quad1])
+
+    expect(a.equals(b)).toBe(true)
+    expect(b.equals(a)).toBe(true)
+
+    const c = rdf.dataset([quad1, quad2, quad3])
+    const d = rdf.dataset([quad3, quad2])
+    expect(c.equals(d)).toBe(false)
+    expect(d.equals(c)).toBe(false)
+  })
+
   test('.filter should return a new dataset that contains all quads that pass the filter test', () => {
     const quad1 = rdf.quad(
       rdf.namedNode('http://example.org/subject'),

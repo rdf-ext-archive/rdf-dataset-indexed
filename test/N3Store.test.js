@@ -1164,16 +1164,6 @@ describe('N3Store', () => {
       ]))
       expect(store._addQuad(quadify('s1', 'p1', 'o1', 'c4'))).toBe(true)
     })
-
-    test.skip('should use the factory when returning quads', () => {
-      expect(store._getQuads()).toEqual([
-        { s: 'n-s1', p: 'n-p1', o: 'n-o1', g: 'defaultGraph' },
-        { s: 'n-s1', p: 'n-p1', o: 'n-o2', g: 'defaultGraph' },
-        { s: 'n-s1', p: 'n-p2', o: 'n-o2', g: 'defaultGraph' },
-        { s: 'n-s2', p: 'n-p1', o: 'n-o1', g: 'defaultGraph' },
-        { s: 'n-s1', p: 'n-p1', o: 'n-o1', g: 'n-c4' }
-      ])
-    })
   })
 
   describe('An N3Store', () => {

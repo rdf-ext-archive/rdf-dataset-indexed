@@ -11,6 +11,14 @@ class Dataset extends DatasetCore {
     return this
   }
 
+  contains (otherDataset) {
+    if (otherDataset.size > this.size) {
+      return false
+    }
+    // b.intersection(a) should faster that a.intersection(b) since b.size < a.size
+    return otherDataset.intersection(this).equals(otherDataset)
+  }
+
   deleteMatches (subject, predicate, object, graph) {
     const remove = (quad) => {
       this._removeQuad(quad)
@@ -24,8 +32,16 @@ class Dataset extends DatasetCore {
     return this.filter((quad) => !other.has(quad))
   }
 
-  equals () {
-    throw new Error('not implemented! (TODO)')
+  equals (otherDataset) {
+    if (this.size !== otherDataset.size) {
+      return false
+    }
+    const intersection = otherDataset.intersection(this)
+    if (intersection.size !== this.size) {
+      return false
+    }
+    const union = otherDataset.union(this)
+    return union.size === this.size
   }
 
   filter (iteratee) {
