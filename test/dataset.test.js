@@ -121,8 +121,10 @@ describe('Dataset', () => {
 
     const c = rdf.dataset([quad1, quad2, quad3])
     const d = rdf.dataset([quad3, quad2])
+    const e = rdf.dataset([quad1, quad2])
     expect(c.equals(d)).toBe(false)
     expect(d.equals(c)).toBe(false)
+    expect(e.equals(d)).toBe(false)
   })
 
   test('.filter should return a new dataset that contains all quads that pass the filter test', () => {
@@ -326,13 +328,60 @@ describe('Dataset', () => {
       rdf.namedNode('http://example.org/predicate'),
       rdf.literal('b'))
 
-    const dataset1 = rdf.dataset([quad1])
-    const dataset2 = rdf.dataset([quad2])
-    const dataset3 = dataset1.union(dataset2)
+    const quad3 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('b'))
 
-    expect(dataset1.size).toBe(1)
-    expect(dataset2.size).toBe(1)
-    expect(dataset3.size).toBe(2)
+    const quad4 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('c'))
+
+    const dataset1 = rdf.dataset([quad1, quad2])
+    const dataset2 = rdf.dataset([quad3, quad4])
+    const union = dataset1.union(dataset2)
+
+    expect(dataset1.size).toBe(2)
+    expect(dataset2.size).toBe(2)
+    expect(union.size).toBe(3)
+  })
+
+  test('.contains should work', () => {
+    const quad1 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('a'))
+
+    const quad2 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('b'))
+
+    const quad2b = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('b'))
+
+    const quad3 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('c', 'en'))
+
+    const quad4 = rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.literal('d', 'en'))
+
+    const dataset1 = rdf.dataset([quad1, quad2])
+    const dataset2 = rdf.dataset([quad2b, quad3])
+    const dataset3 = rdf.dataset([quad2b, quad3, quad4])
+    const union = dataset1.union(dataset2)
+
+    expect(union.size).toBe(3)
+    expect(union.contains(dataset1)).toBe(true)
+    expect(union.contains(dataset2)).toBe(true)
+    expect(dataset1.contains(dataset3)).toBe(false)
   })
 
   test('.delete should delete the given triple', () => {
