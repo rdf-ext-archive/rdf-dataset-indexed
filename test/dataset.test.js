@@ -458,6 +458,38 @@ describe('Dataset', () => {
     expect(dataset.deleteMatches(null, null, null, rdf.namedNode('http://example.org/graph1')).size).toBe(0)
   })
 
+  test('.reduce', () => {
+    const quads = [rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.blankNode()
+    ), rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.blankNode()
+    ), rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.blankNode()
+    ), rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.namedNode('http://example.org/foo')
+    )]
+
+    const dataset = rdf.dataset(quads)
+    const seen = []
+    let rand = Math.random()
+    dataset.reduce((acc, quad) => {
+      expect(acc).toBe(rand)
+      expect(quads).toContain(quad)
+      expect(seen).not.toContain(quad)
+      seen.push(quad)
+      rand = Math.random()
+      return rand
+    }, rand)
+  })
+
   test('.some should return true if any quad pass the filter test', () => {
     const quad1 = rdf.quad(
       rdf.namedNode('http://example.org/subject'),
