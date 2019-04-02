@@ -1,5 +1,6 @@
-const rdf = require('..')
 const EventEmitter = require('events').EventEmitter
+const dedent = require('dedent')
+const rdf = require('..')
 
 function simpleFilter (subject, predicate, object, graph) {
   return function (quad) {
@@ -490,6 +491,66 @@ describe('Dataset', () => {
 
     expect(quad1.equals(array[0]))
     expect(quad2.equals(array[1]))
+  })
+
+  test('.toCanonical should return a canonicalized version as string', () => {
+    const quads = [rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.blankNode()
+    ), rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.blankNode()
+    ), rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.blankNode()
+    ), rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.namedNode('http://example.org/foo')
+    )]
+
+    const dataset = rdf.dataset(quads)
+
+    const str = dataset.toCanonical()
+    expect(str.trim()).toBe(dedent`
+      <http://example.org/subject> <http://example.org/predicate> <http://example.org/foo> .
+      <http://example.org/subject> <http://example.org/predicate> _:c14n0 .
+      <http://example.org/subject> <http://example.org/predicate> _:c14n1 .
+      <http://example.org/subject> <http://example.org/predicate> _:c14n2 .
+    `.trim())
+  })
+
+  test('.toString should return a string', () => {
+    const quads = [rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.blankNode()
+    ), rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.blankNode()
+    ), rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.blankNode()
+    ), rdf.quad(
+      rdf.namedNode('http://example.org/subject'),
+      rdf.namedNode('http://example.org/predicate'),
+      rdf.namedNode('http://example.org/foo')
+    )]
+
+    const dataset = rdf.dataset(quads)
+
+    const str = dataset.toString()
+    expect(str.trim()).toBe(dedent`
+      <http://example.org/subject> <http://example.org/predicate> <http://example.org/foo> .
+      <http://example.org/subject> <http://example.org/predicate> _:c14n0 .
+      <http://example.org/subject> <http://example.org/predicate> _:c14n1 .
+      <http://example.org/subject> <http://example.org/predicate> _:c14n2 .
+    `.trim())
   })
 
   test('.toStream should return a stream which emits all quads of the dataset', () => {

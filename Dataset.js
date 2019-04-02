@@ -1,4 +1,5 @@
 const Readable = require('readable-stream')
+const canonize = require('rdf-canonize')
 const DatasetCore = require('./DatasetCore')
 
 class Dataset extends DatasetCore {
@@ -83,7 +84,7 @@ class Dataset extends DatasetCore {
   }
 
   toCanonical () {
-    throw new Error('not implemented! (TODO)')
+    return canonize.canonizeSync(this.toArray(), { algorithm: 'URDNA2015', native: false })
   }
 
   toStream () {
@@ -102,7 +103,7 @@ class Dataset extends DatasetCore {
   }
 
   toString () {
-    throw new Error('not implemented! (TODO)')
+    return this.toCanonical()
   }
 
   union (other) {

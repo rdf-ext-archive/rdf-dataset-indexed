@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@rdfjs/data-model": "^1.1.2",
+    "rdf-canonize": "^1.0.3",
     "readable-stream": "^3.4.0"
   }
 }
