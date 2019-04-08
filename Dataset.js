@@ -16,7 +16,7 @@ class Dataset extends DatasetCore {
     if (otherDataset.size > this.size) {
       return false
     }
-    // b.intersection(a) should faster that a.intersection(b) since b.size < a.size
+    // other.intersection(this) should be faster than this.intersection(other) since other.size <= this.size
     return otherDataset.intersection(this).equals(otherDataset)
   }
 
