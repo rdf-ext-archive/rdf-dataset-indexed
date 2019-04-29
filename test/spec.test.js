@@ -1,5 +1,3 @@
-/* global describe */
-
 const model = require('@rdfjs/data-model')
 const standard = require('@rdfjs/dataset/test')
 const dataset = require('..')
