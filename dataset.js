@@ -33,6 +33,10 @@ class Dataset extends N3Store {
     return this.create(this._getQuads())
   }
 
+  delete (quad) {
+    return this.remove(quad)
+  }
+
   difference (other) {
     return this.create(this.filter(quad => !other.includes(quad)))
   }
@@ -48,6 +52,10 @@ class Dataset extends N3Store {
 
   forEach (callback) {
     this._forEach(callback)
+  }
+
+  has (quad) {
+    return this.includes(quad)
   }
 
   import (stream) {
@@ -111,6 +119,10 @@ class Dataset extends N3Store {
     })
 
     return stream
+  }
+
+  [Symbol.iterator] () {
+    return this._quads.values()
   }
 }
 
