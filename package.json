@@ -21,18 +21,18 @@
     "lib"
   ],
   "devDependencies": {
-    "@rdfjs/dataset": "^1.0.0",
-    "@rdfjs/namespace": "^1.0.0",
-    "babel-eslint": "^10.0.1",
-    "coveralls": "^3.0.3",
+    "@rdfjs/dataset": "^1.0.1",
+    "@rdfjs/namespace": "^1.1.0",
+    "babel-eslint": "^10.0.3",
+    "coveralls": "^3.0.6",
     "eslint": "^5.16.0",
     "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.17.2",
-    "eslint-plugin-jest": "^22.5.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.17.0",
     "eslint-plugin-node": "^8.0.1",
-    "eslint-plugin-promise": "^4.1.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "jest": "^24.7.1"
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "jest": "^24.9.0"
   },
   "scripts": {
     "coveralls": "cat ./coverage/lcov.info | coveralls",
@@ -47,7 +47,7 @@
     "url": "https://github.com/rdf-ext/rdf-dataset-indexed/issues"
   },
   "dependencies": {
-    "@rdfjs/data-model": "^1.1.1",
-    "readable-stream": "^3.3.0"
+    "@rdfjs/data-model": "^1.1.2",
+    "readable-stream": "^3.4.0"
   }
 }
