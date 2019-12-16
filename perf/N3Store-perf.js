@@ -8,18 +8,23 @@ if (!assert.hasOwnProperty('strict')) {
 }
 const rdf = require('@rdfjs/data-model')
 
-const Dataset = require('../dataset')
+const datasetFactory = require('..')
+let dataset = datasetFactory()
+
+// const rdfjsDataset = require('@rdfjs/dataset')
+// const datasetFactory = () => rdfjsDataset.dataset()
+// let dataset = datasetFactory()
 
 console.log('N3Store performance test')
 
 const prefix = 'http://example.org/#'
+const prefixed = (term) => rdf.namedNode(`${prefix}${term}`)
 
 /* Test triples */
 let dim = parseInt(process.argv[2], 10) || 64
 let dimSquared = dim * dim
 let dimCubed = dimSquared * dim
 
-let dataset = new Dataset()
 let TEST = `- Adding ${dimCubed} triples to the default graph`
 console.time(TEST)
 let i, j, k, l
@@ -28,9 +33,9 @@ for (i = 0; i < dim; i++) {
     for (k = 0; k < dim; k++) {
       dataset.add(
         rdf.quad(
-          rdf.namedNode(prefix + i),
-          rdf.namedNode(prefix + j),
-          rdf.namedNode(prefix + k)
+          prefixed(i),
+          prefixed(j),
+          prefixed(k)
         )
       )
     }
@@ -45,7 +50,7 @@ console.time(TEST)
 for (i = 0; i < dim; i++) {
   for (j = 0; j < dim; j++) {
     for (k = 0; k < dim; k++) {
-      assert.strict.equal(dataset.match(prefix + i, prefix + j, prefix + k, '').length, 1)
+      assert.strict.equal(dataset.match(prefixed(i), prefixed(j), prefixed(k), '').size, 1)
     }
   }
 }
@@ -55,17 +60,17 @@ TEST = `- Finding all ${dimCubed} triples in the default graph ${dimSquared * 2}
 console.time(TEST)
 for (i = 0; i < dim; i++) {
   for (j = 0; j < dim; j++) {
-    assert.strict.equal(dataset.match(prefix + i, prefix + j, null, '').length, dim)
+    assert.strict.equal(dataset.match(prefixed(i), prefixed(j), null, '').size, dim)
   }
 }
 for (i = 0; i < dim; i++) {
   for (j = 0; j < dim; j++) {
-    assert.strict.equal(dataset.match(prefix + i, null, prefix + j, '').length, dim)
+    assert.strict.equal(dataset.match(prefixed(i), null, prefixed(j), '').size, dim)
   }
 }
 for (i = 0; i < dim; i++) {
   for (j = 0; j < dim; j++) {
-    assert.strict.equal(dataset.match(null, prefix + i, prefix + j, '').length, dim)
+    assert.strict.equal(dataset.match(null, prefixed(i), prefixed(j), '').size, dim)
   }
 }
 console.timeEnd(TEST)
@@ -73,13 +78,13 @@ console.timeEnd(TEST)
 TEST = `- Finding all ${dimCubed} triples in the default graph ${dimSquared * 3} times (2 variables)`
 console.time(TEST)
 for (i = 0; i < dim; i++) {
-  assert.strict.equal(dataset.match(prefix + i, null, null, '').length, dimSquared)
+  assert.strict.equal(dataset.match(prefixed(i), null, null, '').size, dimSquared)
 }
 for (j = 0; j < dim; j++) {
-  assert.strict.equal(dataset.match(null, prefix + j, null, '').length, dimSquared)
+  assert.strict.equal(dataset.match(null, prefixed(j), null, '').size, dimSquared)
 }
 for (k = 0; k < dim; k++) {
-  assert.strict.equal(dataset.match(null, null, prefix + k, '').length, dimSquared)
+  assert.strict.equal(dataset.match(null, null, prefixed(k), '').size, dimSquared)
 }
 console.timeEnd(TEST)
 
@@ -91,7 +96,7 @@ dimSquared = dim * dim
 dimCubed = dimSquared * dim
 const dimQuads = dimCubed * dim
 
-dataset = new Dataset()
+dataset = datasetFactory()
 TEST = `- Adding ${dimQuads} quads`
 console.time(TEST)
 for (i = 0; i < dim; i++) {
@@ -100,10 +105,10 @@ for (i = 0; i < dim; i++) {
       for (l = 0; l < dim; l++) {
         dataset.add(
           rdf.quad(
-            rdf.namedNode(prefix + i),
-            rdf.namedNode(prefix + j),
-            rdf.namedNode(prefix + k),
-            rdf.namedNode(prefix + l)
+            prefixed(i),
+            prefixed(j),
+            prefixed(k),
+            prefixed(l)
           )
         )
       }
@@ -117,15 +122,15 @@ console.log(`* Memory usage for quads: ${Math.round(process.memoryUsage().rss / 
 TEST = `- Finding all ${dimQuads} quads ${dimCubed * 4} times (3 variables)`
 console.time(TEST)
 for (i = 0; i < dim; i++) {
-  assert.strict.equal(dataset.match(prefix + i, null, null, null).length, dimCubed)
+  assert.strict.equal(dataset.match(prefixed(i), null, null, null).size, dimCubed)
 }
 for (j = 0; j < dim; j++) {
-  assert.strict.equal(dataset.match(null, prefix + j, null, null).length, dimCubed)
+  assert.strict.equal(dataset.match(null, prefixed(j), null, null).size, dimCubed)
 }
 for (k = 0; k < dim; k++) {
-  assert.strict.equal(dataset.match(null, null, prefix + k, null).length, dimCubed)
+  assert.strict.equal(dataset.match(null, null, prefixed(k), null).size, dimCubed)
 }
 for (l = 0; l < dim; l++) {
-  assert.strict.equal(dataset.match(null, null, null, prefix + l).length, dimCubed)
+  assert.strict.equal(dataset.match(null, null, null, prefixed(l)).size, dimCubed)
 }
 console.timeEnd(TEST)
