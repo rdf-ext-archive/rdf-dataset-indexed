@@ -21,6 +21,7 @@
     "lib"
   ],
   "devDependencies": {
+    "@rdfjs/dataset": "^1.0.1",
     "@rdfjs/namespace": "^1.0.0",
     "babel-eslint": "^10.0.1",
     "coveralls": "^3.0.3",
