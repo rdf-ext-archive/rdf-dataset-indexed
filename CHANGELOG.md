@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* No longer return 'datatype' in toId() if literal is string or langString. 
+
 ## 0.4.0
 
 * Add method aliases for RDF/JS DatasetCore compatibility
